@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">DM2E_ParejaBarajas_OlahEliabe</string>
+    <string name="app_name">MemoryGame</string>
+
+    <string name="title_main">MatchGame_yourname</string>
+    <string name="prompt_name">Enter your name:</string>
+    <string name="hint_name">Your Name</string>
+    <string name="error_empty_name">Please enter your name to start.</string>
+    <string name="leaderboard">🏆 Ranking 🏆</string>
+
+    <string name="title_game_prefix">Cards_</string>
+    <string name="label_player">Player: </string>
+    <string name="toast_level_complete"> complete! Next level...</string>
+    <string name="toast_game_over">Game over! Final score: </string>
+    <string name="toast_score_saved">Game over. Score processed.</string>
+    <string name="level_prefix">Level </string>
 </resources>

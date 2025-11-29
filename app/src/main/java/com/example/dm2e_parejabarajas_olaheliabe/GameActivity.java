@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import android.app.AlertDialog;
+import android.database.Cursor;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -41,12 +43,12 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         String playerName = getIntent().getStringExtra("PLAYER_NAME");
-        setTitle("Cartas_" + playerName);
+        setTitle(getString(R.string.title_game_prefix) + playerName);
 
         playerNameTv = findViewById(R.id.tv_player_name);
         cardsGrid = findViewById(R.id.grid_cards);
 
-        playerNameTv.setText("Jugador: " + playerName);
+        playerNameTv.setText(getString(R.string.label_player) + playerName);
 
         setupLevel(currentLevel);
     }
@@ -179,19 +181,55 @@ public class GameActivity extends AppCompatActivity {
 
     private void advanceLevel() {
         if (currentLevel < 3) {
-            Toast.makeText(this, "Nivel " + currentLevel + " completado! Siguiente nivel...", Toast.LENGTH_SHORT).show();
+            String msg = getString(R.string.level_prefix) + currentLevel + getString(R.string.toast_level_complete);
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
             setupLevel(currentLevel + 1);
         } else {
-            Toast.makeText(this, "Juego terminado! Puntuación final: " + score, Toast.LENGTH_LONG).show();
+            String msg = getString(R.string.toast_game_over) + score;
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
             saveScoreToDatabase(getIntent().getStringExtra("PLAYER_NAME"), score);
         }
     }
     private void saveScoreToDatabase(String playerName, int finalScore) {
         ScoreDbHelper dbHelper = new ScoreDbHelper(this);
-
         dbHelper.saveOrUpdateScore(playerName, finalScore);
 
-        Toast.makeText(this, "Juego terminado. Puntuación procesada.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.toast_score_saved), Toast.LENGTH_LONG).show();
 
+        showRankingDialog();
     }
+
+    private void showRankingDialog() {
+        ScoreDbHelper dbHelper = new ScoreDbHelper(this);
+        Cursor cursor = dbHelper.getAllScores();
+
+        if (cursor.getCount() == 0) {
+            // No hay datos
+            return;
+        }
+
+        StringBuilder buffer = new StringBuilder();
+
+        // Recorremos el cursor
+        while (cursor.moveToNext()) {
+            // Índice 1 es player_name, Índice 2 es score (según tu CREATE TABLE)
+            String name = cursor.getString(1);
+            int pScore = cursor.getInt(2);
+
+            buffer.append(name).append(": ").append(pScore).append(" clicks\n");
+        }
+        cursor.close(); // Siempre cerrar el cursor
+
+        // Mostrar el AlertDialog
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.leaderboard)
+                .setMessage(buffer.toString())
+                .setPositiveButton("OK", (dialog, which) -> {
+                    // Al pulsar OK, cerramos la actividad y volvemos al inicio (opcional)
+                    finish();
+                })
+                .setCancelable(false) // Obliga a pulsar OK
+                .show();
+    }
+
 }

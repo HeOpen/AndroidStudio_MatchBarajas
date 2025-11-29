@@ -1,34 +1,39 @@
 package com.example.dm2e_parejabarajas_olaheliabe;
+
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.dm2e_parejabarajas_olaheliabe.GameActivity;
-import com.example.dm2e_parejabarajas_olaheliabe.R;
-
 public class MainActivity extends AppCompatActivity {
 
     private EditText playerNameEt;
+    private View rankingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set the window title as required
-        setTitle("JuegoDeParejas_tunombre");
+        setTitle(getString(R.string.title_main));
 
         playerNameEt = findViewById(R.id.et_player_name);
 
-        // Listen for the "Done" or "Intro" key press on the keyboard
+        rankingView = findViewById(R.id.bt_ranking);
+
+        if (rankingView != null) {
+            rankingView.setOnClickListener(v -> showRankingDialog());
+        }
+
         playerNameEt.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                // This method is called when the user presses 'Intro'
                 attemptStartGame();
-                return true; // Consume the event
+                return true;
             }
             return false;
         });
@@ -38,13 +43,35 @@ public class MainActivity extends AppCompatActivity {
         String playerName = playerNameEt.getText().toString().trim();
 
         if (playerName.isEmpty()) {
-            // If the name is empty, it continues on this first window (as required)
-            Toast.makeText(this, "Por favor, escribe tu nombre para empezar.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_empty_name), Toast.LENGTH_SHORT).show();
         } else {
-            // Start the second activity and pass the name
             Intent intent = new Intent(MainActivity.this, GameActivity.class);
             intent.putExtra("PLAYER_NAME", playerName);
             startActivity(intent);
         }
+    }
+
+    private void showRankingDialog() {
+        ScoreDbHelper dbHelper = new ScoreDbHelper(this);
+        Cursor cursor = dbHelper.getAllScores();
+
+        if (cursor == null || cursor.getCount() == 0) {
+            Toast.makeText(this, "No rankings yet!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        StringBuilder buffer = new StringBuilder();
+        while (cursor.moveToNext()) {
+            String name = cursor.getString(1);
+            int pScore = cursor.getInt(2);
+            buffer.append(name).append(": ").append(pScore).append(" clicks\n");
+        }
+        cursor.close();
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.leaderboard)
+                .setMessage(buffer.toString())
+                .setPositiveButton("OK", null)
+                .show();
     }
 }

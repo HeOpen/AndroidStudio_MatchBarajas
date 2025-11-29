@@ -59,4 +59,10 @@ public class ScoreDbHelper extends SQLiteOpenHelper {
         }
         db.close();
     }
+    public Cursor getAllScores() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Ordenamos por 'score' ASC (Ascendente) porque menos clicks es mejor
+        return db.query(TABLE_SCORES, null, null, null, null, null, COL_SCORE + " ASC");
+    }
 }
+

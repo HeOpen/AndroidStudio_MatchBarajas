@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">ИграПамять</string>
+
+    <string name="title_main">ИграПары_вашеимя</string>
+    <string name="prompt_name">Введите ваше имя:</string>
+    <string name="hint_name">Ваше имя</string>
+    <string name="error_empty_name">Пожалуйста, введите имя для начала.</string>
+    <string name="leaderboard">🏆 Рейтинговый балл 🏆</string>
+
+    <string name="title_game_prefix">Карты_</string>
+    <string name="label_player">Игрок: </string>
+    <string name="toast_level_complete"> пройден! Следующий уровень…</string>
+    <string name="toast_game_over">Игра окончена! Финальный счет: </string>
+    <string name="toast_score_saved">Игра окончена. Счет сохранен.</string>
+    <string name="level_prefix">Уровень </string>
+</resources>

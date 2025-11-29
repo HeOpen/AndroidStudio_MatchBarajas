@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/wpp"
-        android:alpha="0.2"
+        android:alpha="0.5"
         >
 
     </ImageView>
@@ -20,7 +20,7 @@
         android:id="@+id/tv_prompt_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Escribe tu nombre:"
+        android:text="@string/label_player"
         android:textColor="#FF00FFFF"  android:background="#000000"  android:padding="8dp"
         android:textSize="20sp"
         app:layout_constraintVertical_bias="0.4"
@@ -34,7 +34,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:hint="Tu Nombre"
+        android:hint="@string/hint_name"
         android:imeOptions="actionDone"
         android:inputType="text"
         android:textColor="#FFFFFF"
@@ -42,5 +42,17 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_prompt_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_prompt_name" />
+
+    <Button
+        android:id="@+id/bt_ranking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFF00"
+        android:text="@string/leaderboard"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        tools:ignore="MissingConstraints">
+
+    </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
