@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.dm2e_parejabarajas_olaheliabe"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"

@@ -5,7 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#595959"  tools:context=".MainActivity">
+    android:background="#000000"  tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/wpp"
+        android:alpha="0.2"
+        >
+
+    </ImageView>
 
     <TextView
         android:id="@+id/tv_prompt_name"
@@ -13,7 +22,7 @@
         android:layout_height="wrap_content"
         android:text="Escribe tu nombre:"
         android:textColor="#FF00FFFF"  android:background="#000000"  android:padding="8dp"
-        android:textSize="18sp"
+        android:textSize="20sp"
         app:layout_constraintVertical_bias="0.4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/et_player_name"
@@ -25,13 +34,13 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:hint="Tu Nombre"
+        android:imeOptions="actionDone"
         android:inputType="text"
-        android:imeOptions="actionDone"  android:hint="Tu Nombre"
         android:textColor="#FFFFFF"
-        android:textColorHint="#AAAAAA"
-        android:background="@drawable/edittext_border" android:padding="8dp"
+        android:textColorHint="#FF00FFFF"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_prompt_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_prompt_name" />
 
-</androidx.constraintlayout.widget.ConstraintLayout
+</androidx.constraintlayout.widget.ConstraintLayout>

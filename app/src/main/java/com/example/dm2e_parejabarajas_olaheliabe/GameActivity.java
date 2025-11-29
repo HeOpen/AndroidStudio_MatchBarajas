@@ -4,17 +4,11 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
-// Since Card is in the same package, this line is not strictly needed,
-// but it is harmless if used:
-// import com.example.dm2e_parejabarajas_olaheliabe.Card;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,17 +19,13 @@ public class GameActivity extends AppCompatActivity {
     private TextView playerNameTv;
     private GridLayout cardsGrid;
 
-    // --- Game State Variables ---
     private int currentLevel = 1;
-    private int score = 0; // Tracks total clicks (pulsaciones)
+    private int score = 0;
     private Card firstCard = null;
     private Card secondCard = null;
     private boolean isBusy = false;
     private List<Card> currentCards = new ArrayList<>();
 
-    // Available card images (front side: 6 unique images)
-    // Available card images (front side: 6 unique images)
-    // Note: card0 is reserved for the back of the card.
     private final List<Integer> availableImages = Arrays.asList(
             R.drawable.card1,
             R.drawable.card2,
@@ -44,7 +34,6 @@ public class GameActivity extends AppCompatActivity {
             R.drawable.card5,
             R.drawable.card6
     );
-    // R.drawable.a0_card is the back/default image, handled in Card.java
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +51,6 @@ public class GameActivity extends AppCompatActivity {
         setupLevel(currentLevel);
     }
 
-    // --- LEVEL SETUP LOGIC ---
     private void setupLevel(int level) {
         int numPairs;
         int numCards;
@@ -86,19 +74,20 @@ public class GameActivity extends AppCompatActivity {
         cardsGrid.removeAllViews();
         currentCards.clear();
 
-        // 1. Select and Shuffle Images
         List<Integer> selectedImages = new ArrayList<>(availableImages.subList(0, numPairs));
         List<Integer> gameImages = new ArrayList<>();
         gameImages.addAll(selectedImages);
         gameImages.addAll(selectedImages);
         Collections.shuffle(gameImages);
 
-        // 2. Configure Grid
-        cardsGrid.setColumnCount(numCards / 2);
-        cardsGrid.setRowCount(2);
-        if (numCards == 12) cardsGrid.setRowCount(4);
+        if (level == 1) {
+            cardsGrid.setColumnCount(2);
+            cardsGrid.setRowCount(2);
+        } else {
+            cardsGrid.setColumnCount(3);
+            cardsGrid.setRowCount(numCards / 3);
+        }
 
-        // 3. Create Buttons (Cards)
         for (int i = 0; i < numCards; i++) {
             Button cardButton = createCardButton(gameImages.get(i));
             cardsGrid.addView(cardButton);
@@ -113,7 +102,7 @@ public class GameActivity extends AppCompatActivity {
         params.setMargins(8, 8, 8, 8);
         button.setLayoutParams(params);
 
-        Card card = new Card(imageId, button); // Card is found correctly here
+        Card card = new Card(imageId, button);
         button.setTag(card);
         currentCards.add(card);
 
@@ -123,7 +112,6 @@ public class GameActivity extends AppCompatActivity {
         return button;
     }
 
-    // --- GAME LOGIC (Rest of the methods remain the same) ---
 
     private void handleCardClick(Card card) {
         if (isBusy || card.isMatched() || card == firstCard) {
@@ -153,8 +141,8 @@ public class GameActivity extends AppCompatActivity {
     private void matchFound() {
         firstCard.setMatched(true);
         secondCard.setMatched(true);
-        firstCard.getButton().setBackgroundColor(Color.YELLOW);
-        secondCard.getButton().setBackgroundColor(Color.YELLOW);
+        firstCard.getButton().setBackgroundColor(Color.GREEN);
+        secondCard.getButton().setBackgroundColor(Color.GREEN);
 
         MediaPlayer mp = MediaPlayer.create(this, R.raw.applause);
         mp.start();
@@ -198,8 +186,12 @@ public class GameActivity extends AppCompatActivity {
             saveScoreToDatabase(getIntent().getStringExtra("PLAYER_NAME"), score);
         }
     }
-
     private void saveScoreToDatabase(String playerName, int finalScore) {
-        // Implementation for ScoreDbHelper goes here
+        ScoreDbHelper dbHelper = new ScoreDbHelper(this);
+
+        dbHelper.saveOrUpdateScore(playerName, finalScore);
+
+        Toast.makeText(this, "Juego terminado. Puntuación procesada.", Toast.LENGTH_LONG).show();
+
     }
 }
